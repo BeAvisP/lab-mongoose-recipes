@@ -20,7 +20,7 @@ mongoose
     return self.connection.dropDatabase();
   })
   .then(() => {
-    // Run your code here, after you have insured that the connection was made
+    // Iteration 2
     const recipe1 = {
       title: "Lasaña",
       level: "Amateur Chef",
@@ -30,27 +30,31 @@ mongoose
       duration: 70,
       creator: "Jesi"
     };
-  
-    // Iteration 2
-    Recipe.create(recipe1)
-      .then( recipe => {
-        console.log(`Recipe created: ${recipe.title}`)
-      })
-      .catch(error => console.error(error));
-
-    // Iteration 3
-    Recipe.insertMany(data)
-      .then( recipes => {
-        console.log(`Recipes created from data`)
-        Recipe.find({}, {title:1, _id:0})
-        .then( recipes => console.log(recipes))
-        .catch(error => console.error(error));
-      })
-      .catch(error => console.error(error));
+    return Recipe.create(recipe1)
+  })
+  .then(recipe => {
+    console.log(`Recipe created: ${recipe.title}`)
+    return Recipe.insertMany(data)
+  })
+  .then( () => {
+    console.log(`Recipes created from data`)
+    return Recipe.find({}, {title:1, _id:0})
+  })
+  .then( recipes => {
+    console.log(recipes)
+    return Recipe.findOneAndUpdate({title: "Rigatoni alla Genovese"}, {$set: {duration: 100}}, {new: true})
+  })
+  .then( recipe => {
+    console.log(`${recipe.title} updated succesfully`)
+    return Recipe.deleteOne({ title: "Carrot Cake"})
+  })
+  .then(recipe => {
+    console.log(recipe);
+    mongoose.connection.close()
+      .then( () => console.log("Connection closed"))
+      .catch(error => console.error(error))
   })
   .catch(error => {
     console.error('Error connecting to the database', error);
-  });
-
-
+  }); 
   
