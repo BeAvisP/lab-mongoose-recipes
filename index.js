@@ -31,9 +31,20 @@ mongoose
       creator: "Jesi"
     };
   
+    // Iteration 2
     Recipe.create(recipe1)
       .then( recipe => {
         console.log(`Recipe created: ${recipe.title}`)
+      })
+      .catch(error => console.error(error));
+
+    // Iteration 3
+    Recipe.insertMany(data)
+      .then( recipes => {
+        console.log(`Recipes created from data`)
+        Recipe.find({}, {title:1, _id:0})
+        .then( recipes => console.log(recipes))
+        .catch(error => console.error(error));
       })
       .catch(error => console.error(error));
   })
